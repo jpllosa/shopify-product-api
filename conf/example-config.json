@@ -1,0 +1,7 @@
+{
+    "port": 0,
+    "shopify": {
+        "endpoint": "https://<your-store>.myshopify.com/admin/api/<version>/graphql.json",
+        "accessToken": "yourAccessToken"
+    }
+}
