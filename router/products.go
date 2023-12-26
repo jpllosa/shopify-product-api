@@ -2,10 +2,11 @@ package router
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"shopify-product-api/config"
 	"shopify-product-api/marshaller"
+	"shopify-product-api/service"
 	"strings"
 
 	"github.com/go-chi/chi/v5"
@@ -57,6 +58,9 @@ type ThrottleStatus struct {
 	RestoreRate        float32 `json:"restoreRate,omitempty"`
 }
 
+const contentType string = "Content-Type"
+const applicationJson string = "application/json"
+
 func GetProducts(config config.Config) chi.Router {
 	router := chi.NewRouter()
 
@@ -104,8 +108,7 @@ func GetProducts(config config.Config) chi.Router {
 		if err != nil {
 			panic(err)
 		}
-		const contentType string = "Content-Type"
-		const applicationJson string = "application/json"
+
 		req.Header.Add(contentType, applicationJson)
 		req.Header.Add("X-Shopify-Access-Token", config.Shopify.AccessToken)
 
@@ -117,7 +120,7 @@ func GetProducts(config config.Config) chi.Router {
 
 		fmt.Println("Response status:", resp.Status)
 
-		responseBody, err := ioutil.ReadAll(resp.Body)
+		responseBody, err := io.ReadAll(resp.Body)
 		if err != nil {
 			panic(err)
 		}
@@ -125,6 +128,21 @@ func GetProducts(config config.Config) chi.Router {
 		gqlResp := marshaller.Unmarshal[GqlResponse](responseBody)
 
 		jsonBytes := marshaller.Marshal(gqlResp.Data.Products.Edges)
+
+		w.Header().Set(contentType, applicationJson)
+		w.WriteHeader(200)
+		w.Write(jsonBytes)
+	})
+
+	return router
+}
+
+func GetCachedProducts(config config.Config, products []service.Product) chi.Router {
+	router := chi.NewRouter()
+
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+
+		jsonBytes := marshaller.Marshal(products)
 
 		w.Header().Set(contentType, applicationJson)
 		w.WriteHeader(200)
