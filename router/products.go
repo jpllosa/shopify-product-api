@@ -151,3 +151,43 @@ func GetCachedProducts(config config.Config, products []service.Product) chi.Rou
 
 	return router
 }
+
+func CopyProduct(config config.Config, products []service.Product) chi.Router {
+	router := chi.NewRouter()
+
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+
+		gid := r.URL.Query().Get("gid")
+
+		copyProduct := service.Product{
+			ID:          "",
+			Title:       "",
+			Handle:      "",
+			Vendor:      "",
+			ProductType: "",
+			Tags:        make([]string, 0),
+			Metafields:  make([]service.Metafield, 0),
+		}
+
+		for _, product := range products {
+			if product.ID == gid {
+				fmt.Println("Found:", product.ID)
+				copyProduct = product
+				break
+			}
+		}
+
+		jsonBytes := marshaller.Marshal(copyProduct)
+
+		err := service.CopyProduct(config, copyProduct)
+		if err != nil {
+			jsonBytes = []byte("{ \"message\": \"Copy product failed\"}")
+		}
+
+		w.Header().Set(contentType, applicationJson)
+		w.WriteHeader(200)
+		w.Write(jsonBytes)
+	})
+
+	return router
+}

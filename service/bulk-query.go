@@ -22,9 +22,14 @@ type GqlResponse struct {
 	// Extensions Extensions `json:"extensions,omitempty"`
 }
 
+type ProductCreate struct {
+	Product Product `json:"product,omitempty"`
+}
+
 type Data struct {
 	BulkOperationRunQuery BulkOperationRunQuery `json:"bulkOperationRunQuery,omitempty"`
 	CurrentBulkOperation  BulkOperation         `json:"currentBulkOperation,omitempty"`
+	ProductCreate         ProductCreate         `json:"productCreate,omitempty"`
 }
 
 type BulkOperationRunQuery struct {

@@ -27,6 +27,7 @@ func main() {
 
 	r.Mount("/products", router.GetProducts(config))
 	r.Mount("/cached-products", router.GetCachedProducts(config, products))
+	r.Mount("/copy-product", router.CopyProduct(config, products))
 
 	http.ListenAndServe(fmt.Sprintf(":%v", config.Port), r)
 }
