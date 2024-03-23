@@ -9,6 +9,7 @@ import (
 
 	"shopify-product-api/config"
 	"shopify-product-api/router"
+	"shopify-product-api/service"
 )
 
 func main() {
@@ -17,12 +18,16 @@ func main() {
 		panic(err)
 	}
 
+	products := service.BulkQuery(config)
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
 	r.Get("/", router.GetStatus)
 
 	r.Mount("/products", router.GetProducts(config))
+	r.Mount("/cached-products", router.GetCachedProducts(config, products))
+	r.Mount("/copy-product", router.CopyProduct(config, products))
 
 	http.ListenAndServe(fmt.Sprintf(":%v", config.Port), r)
 }

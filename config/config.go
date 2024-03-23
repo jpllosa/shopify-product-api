@@ -13,8 +13,10 @@ type Config struct {
 }
 
 type Shopify struct {
-	Endpoint    string `json:"endpoint"`
-	AccessToken string `json:"accessToken"`
+	Endpoint          string `json:"endpoint"`
+	AccessToken       string `json:"accessToken"`
+	TargetEndpoint    string `json:"targetEndpoint"`
+	TargetAccessToken string `json:"targetAccessToken"`
 }
 
 func Load(filePath string) (Config, error) {
