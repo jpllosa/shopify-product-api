@@ -6,4 +6,6 @@ Demo project for consuming the Shopify product API.
 2. [Copy Shopify Product Example](https://jpllosa.blogspot.com/2024/03/copy-shopify-product-example.html)
 3. [Shopify Bulk Query Example](https://jpllosa.blogspot.com/2023/12/shopify-bulk-query-example.html)
 
-Check out [jpllosa.blogspot.com](https://jpllosa.blogspot.com/)
+Check out:
+ - [codesamples.net](https://codesamples.net/)
+ - [jpllosa.blogspot.com](https://jpllosa.blogspot.com/)
